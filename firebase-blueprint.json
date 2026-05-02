@@ -1,0 +1,44 @@
+{
+  "entities": {
+    "Consultation": {
+      "title": "Consultation Inquiry",
+      "description": "Information provided by potential clients for fitness consultations.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Full name of the inquirer"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number"
+        },
+        "program": {
+          "type": "string",
+          "description": "Interested program"
+        },
+        "message": {
+          "type": "string",
+          "description": "Additional notes or questions"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "contacted", "completed"],
+          "description": "Current status of the lead"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the record was created"
+        }
+      },
+      "required": ["name", "phone", "program", "createdAt"]
+    }
+  },
+  "firestore": {
+    "consultations/{consultationId}": {
+      "schema": "Consultation",
+      "description": "Collection of consultation inquiries"
+    }
+  }
+}
