@@ -191,7 +191,7 @@ const Transformation = () => (
     <div className="max-w-7xl mx-auto px-6 md:px-12">
       <div className="text-center mb-20">
         <span className="text-xs font-bold tracking-widest text-brand-primary mb-4 block uppercase">TRANSFORMATION</span>
-        <h2 className="font-serif text-4xl md:text-5xl mb-6">눈으로 확인하는 변화</h2>
+        <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6">눈으로 확인하는 변화</h2>
         <p className="text-brand-text-variant">CorePulse와 함께한 수많은 회원님들의 놀라운 결과입니다.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
