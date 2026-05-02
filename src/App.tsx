@@ -53,7 +53,7 @@ const Nav = () => {
         </div>
         <div className="flex items-center gap-4">
           <button className="bg-brand-primary-container text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:opacity-90 transition-all">
-            카카오톡 상담
+            1:1 맞춤 상담 예약하기
           </button>
         </div>
       </div>
@@ -93,7 +93,7 @@ const Hero = () => (
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <button className="bg-brand-primary text-white px-10 py-5 rounded-full font-bold shadow-xl shadow-brand-primary/20 hover:-translate-y-1 transition-all">
-            카카오톡 상담 시작하기
+            지금 무료 상담 받기
           </button>
           <button className="border border-brand-primary/20 text-brand-text-main hover:bg-brand-surface-container px-10 py-5 rounded-full font-bold transition-all">
             프로그램 둘러보기
