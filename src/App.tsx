@@ -112,7 +112,10 @@ const Nav = ({ isAdmin, onToggleAdmin, user, showAdmin, onLogin }: { isAdmin: bo
 const Hero = () => (
   <section className="relative min-h-screen flex items-center overflow-hidden">
     <div className="absolute inset-0 z-0">
-      <img 
+      <motion.img 
+        initial={{ scale: 1.1, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 2, ease: "easeOut" }}
         className="w-full h-full object-cover" 
         src="https://postfiles.pstatic.net/MjAyNjA1MDJfMSAg/MDAxNzc3Njg5MjcyMjky.-2OgFUGWA_N_qx8gzH6rWtgbclDtFWWKqfS7mS9I_FIg.dTvBhhoqEwsGl38BrLSv1KWdxUusvj2GquCqlAjmeB0g.PNG/magnific_2905756115.png?type=w966" 
         alt="Pilates Studio"
