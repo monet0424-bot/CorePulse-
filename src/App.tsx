@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { 
   UserRound, 
@@ -19,35 +20,10 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
-  Shield,
-  LogOut,
-  Trash2,
-  ExternalLink,
   Loader2
 } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
-import { 
-  db, 
-  auth, 
-  signInWithGoogle, 
-  handleFirestoreError, 
-  OperationType 
-} from './lib/firebase';
-import { 
-  collection, 
-  addDoc, 
-  serverTimestamp, 
-  onSnapshot, 
-  query, 
-  orderBy, 
-  doc, 
-  getDoc,
-  deleteDoc,
-  updateDoc
-} from 'firebase/firestore';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
 
-const Nav = ({ isAdmin, onToggleAdmin, user, showAdmin, onLogin }: { isAdmin: boolean, onToggleAdmin: () => void, user: any, showAdmin: boolean, onLogin: () => void }) => {
+const Nav = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -69,37 +45,13 @@ const Nav = ({ isAdmin, onToggleAdmin, user, showAdmin, onLogin }: { isAdmin: bo
           <span className="text-[14px] md:text-[18px] font-bold text-brand-primary tracking-tight">CorePulse Pilates</span>
         </div>
         <div className="hidden md:flex items-center space-x-8 font-serif text-sm tracking-wide uppercase">
-          <a href="#" className={showAdmin ? "text-brand-text-variant" : "text-brand-primary border-b-2 border-brand-primary pb-1 font-semibold"}>Home</a>
-          {!showAdmin && (
-            <>
-              <a href="#about" className="text-brand-text-variant hover:text-brand-primary transition-colors">About</a>
-              <a href="#program" className="text-brand-text-variant hover:text-brand-primary transition-colors">Program</a>
-              <a href="#pricing" className="text-brand-text-variant hover:text-brand-primary transition-colors">Pricing</a>
-              <a href="#reviews" className="text-brand-text-variant hover:text-brand-primary transition-colors">Reviews</a>
-            </>
-          )}
+          <a href="#" className="text-brand-primary border-b-2 border-brand-primary pb-1 font-semibold">Home</a>
+          <a href="#about" className="text-brand-text-variant hover:text-brand-primary transition-colors">About</a>
+          <a href="#program" className="text-brand-text-variant hover:text-brand-primary transition-colors">Program</a>
+          <a href="#pricing" className="text-brand-text-variant hover:text-brand-primary transition-colors">Pricing</a>
+          <a href="#reviews" className="text-brand-text-variant hover:text-brand-primary transition-colors">Reviews</a>
         </div>
         <div className="flex items-center gap-4">
-          {user ? (
-            isAdmin ? (
-              <button 
-                onClick={onToggleAdmin}
-                className={`flex items-center gap-2 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full transition-all ${
-                  showAdmin ? 'bg-brand-primary text-white' : 'bg-brand-primary-fixed text-brand-primary hover:bg-brand-primary/10'
-                }`}
-              >
-                <Shield className="w-4 h-4" />
-                {showAdmin ? "Back to Site" : "Admin Console"}
-              </button>
-            ) : null
-          ) : (
-            <button 
-              onClick={onLogin}
-              className="text-xs font-bold text-brand-text-variant hover:text-brand-primary uppercase tracking-widest transition-all"
-            >
-              Login
-            </button>
-          )}
           <button className="bg-brand-primary-container text-white px-6 py-2.5 rounded-full font-semibold text-sm hover:opacity-90 transition-all">
             카카오톡 상담
           </button>
@@ -229,50 +181,8 @@ const Transformation = () => (
 );
 
 const App = () => {
-  const [user, setUser] = useState<any>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [showAdmin, setShowAdmin] = useState(false);
-  const [consultations, setConsultations] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({ name: '', phone: '', program: '다이어트 & 체형교정', message: '' });
-
-  // Auth & Admin Check
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        try {
-          const adminDoc = await getDoc(doc(db, 'admins', user.uid));
-          const isSpecialEmail = user.email?.toLowerCase() === 'monet0424@gmail.com';
-          setIsAdmin(adminDoc.exists() || isSpecialEmail);
-        } catch (error) {
-          console.error("Admin check failed:", error);
-          const isSpecialEmail = user.email?.toLowerCase() === 'monet0424@gmail.com';
-          setIsAdmin(isSpecialEmail);
-        }
-      } else {
-        setIsAdmin(false);
-        setShowAdmin(false);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Real-time consultations for admin
-  useEffect(() => {
-    if (isAdmin && user) {
-      const q = query(collection(db, 'consultations'), orderBy('createdAt', 'desc'));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setConsultations(data);
-      }, (error) => {
-        handleFirestoreError(error, OperationType.LIST, 'consultations');
-      });
-      return () => unsubscribe();
-    }
-  }, [isAdmin, user]);
-
   const [submitStatus, setSubmitStatus] = useState<{ type: 'success' | 'err', msg: string } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -281,58 +191,35 @@ const App = () => {
 
     setIsSubmitting(true);
     setSubmitStatus(null);
+    
     try {
-      // 1. Save to Firebase for the Admin Dashboard
-      await addDoc(collection(db, 'consultations'), {
-        ...formData,
-        status: 'pending',
-        createdAt: serverTimestamp()
+      // Send to Formspree for Email Notifications
+      const response = await fetch('https://formspree.io/f/mdayrydy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          program: formData.program,
+          message: formData.message,
+          _subject: `[CorePulse] 새로운 상담 신청: ${formData.name}`
+        })
       });
 
-      // 2. Send to Formspree for Email Notifications
-      try {
-        await fetch('https://formspree.io/f/mdayrydy', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            phone: formData.phone,
-            program: formData.program,
-            message: formData.message,
-            _subject: `[CorePulse] 새로운 상담 신청: ${formData.name}`
-          })
-        });
-      } catch (formspreeError) {
-        console.error("Formspree submission failed, but record was saved to database:", formspreeError);
+      if (response.ok) {
+        setSubmitStatus({ type: 'success', msg: "상담 신청이 완료되었습니다. 곧 연락드리겠습니다." });
+        setFormData({ name: '', phone: '', program: '다이어트 & 체형교정', message: '' });
+      } else {
+        throw new Error('Formspree submission failed');
       }
-
-      setSubmitStatus({ type: 'success', msg: "상담 신청이 완료되었습니다. 곧 연락드리겠습니다." });
-      setFormData({ name: '', phone: '', program: '다이어트 & 체형교정', message: '' });
     } catch (error) {
       setSubmitStatus({ type: 'err', msg: "오류가 발생했습니다. 잠시 후 다시 시도해주세요." });
-      handleFirestoreError(error, OperationType.CREATE, 'consultations');
+      console.error("Submission error:", error);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const updateStatus = async (id: string, newStatus: string) => {
-    try {
-      await updateDoc(doc(db, 'consultations', id), { status: newStatus });
-    } catch (error) {
-      handleFirestoreError(error, OperationType.UPDATE, `consultations/${id}`);
-    }
-  };
-
-  const deleteConsultation = async (id: string) => {
-    if (!window.confirm("정말 삭제하시겠습니까?")) return;
-    try {
-      await deleteDoc(doc(db, 'consultations', id));
-    } catch (error) {
-      handleFirestoreError(error, OperationType.DELETE, `consultations/${id}`);
     }
   };
 
@@ -379,105 +266,11 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-brand-surface selection:bg-brand-primary/20">
-      <Nav 
-        isAdmin={isAdmin} 
-        showAdmin={showAdmin}
-        onToggleAdmin={() => setShowAdmin(!showAdmin)} 
-        user={user} 
-        onLogin={signInWithGoogle}
-      />
+      <Nav />
 
-      {showAdmin && isAdmin ? (
-        <div className="pt-32 pb-20 max-w-7xl mx-auto px-6 md:px-12">
-          <div className="flex justify-between items-center mb-12">
-            <div>
-              <h1 className="font-serif text-4xl mb-2">Consultation Dashboard</h1>
-              <p className="text-brand-text-variant">Manage incoming inquiries and leads</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-xs bg-brand-primary-fixed px-3 py-1 rounded-full text-brand-primary font-bold">Admin: {user?.email}</span>
-              <button 
-                onClick={() => signOut(auth)}
-                className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-widest hover:opacity-70 transition-all"
-              >
-                <LogOut className="w-4 h-4" /> Logout
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-3xl editorial-shadow overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-brand-surface-low border-b border-brand-surface-container">
-                  <tr>
-                    <th className="px-8 py-5 text-xs font-bold text-brand-text-variant uppercase tracking-widest">Client</th>
-                    <th className="px-8 py-5 text-xs font-bold text-brand-text-variant uppercase tracking-widest">Contact</th>
-                    <th className="px-8 py-5 text-xs font-bold text-brand-text-variant uppercase tracking-widest">Program</th>
-                    <th className="px-8 py-5 text-xs font-bold text-brand-text-variant uppercase tracking-widest">Status</th>
-                    <th className="px-8 py-5 text-xs font-bold text-brand-text-variant uppercase tracking-widest">Date</th>
-                    <th className="px-8 py-5 text-xs font-bold text-brand-text-variant uppercase tracking-widest">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-brand-surface-container">
-                  {consultations.length === 0 ? (
-                    <tr>
-                      <td colSpan={6} className="px-8 py-20 text-center text-brand-text-variant italic text-sm">
-                        No inquiries yet.
-                      </td>
-                    </tr>
-                  ) : (
-                    consultations.map((c) => (
-                      <tr key={c.id} className="hover:bg-brand-surface-low/50 transition-colors">
-                        <td className="px-8 py-6">
-                          <p className="font-bold text-brand-text-main">{c.name}</p>
-                        </td>
-                        <td className="px-8 py-6">
-                          <p className="text-sm text-brand-text-variant">{c.phone}</p>
-                          <p className="text-[10px] text-brand-text-variant opacity-60 mt-1 truncate max-w-[150px]">{c.message}</p>
-                        </td>
-                        <td className="px-8 py-6">
-                          <span className="text-xs bg-brand-surface-low px-2 py-1 rounded-md text-brand-text-main border border-brand-surface-container">{c.program}</span>
-                        </td>
-                        <td className="px-8 py-6">
-                          <select 
-                            value={c.status} 
-                            onChange={(e) => updateStatus(c.id, e.target.value)}
-                            className={`text-xs font-bold px-3 py-1 rounded-full outline-none appearance-none cursor-pointer ${
-                              c.status === 'pending' ? 'bg-orange-100 text-orange-700' : 
-                              c.status === 'contacted' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'
-                            }`}
-                          >
-                            <option value="pending">Pending</option>
-                            <option value="contacted">Contacted</option>
-                            <option value="completed">Completed</option>
-                          </select>
-                        </td>
-                        <td className="px-8 py-6">
-                          <p className="text-xs text-brand-text-variant">
-                            {c.createdAt?.toDate().toLocaleDateString()}
-                          </p>
-                        </td>
-                        <td className="px-8 py-6">
-                          <button 
-                            onClick={() => deleteConsultation(c.id)}
-                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <>
-          <Hero />
-          <Highlights />
-          <Transformation />
+      <Hero />
+      <Highlights />
+      <Transformation />
           {/* ... existing other sections ... */}
 
       {/* Philosophy Section */}
@@ -822,9 +615,7 @@ const App = () => {
           </div>
         </div>
       </section>
-        </>
-      )}
-
+      
       {/* Footer */}
       <footer className="py-20 border-t border-brand-surface-container bg-brand-surface-low">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-8">
@@ -839,15 +630,6 @@ const App = () => {
           </div>
           <div className="text-xs text-brand-text-variant">© 2024 CorePulse Pilates. Effortless Precision.</div>
           <div className="flex gap-8 text-[10px] font-bold tracking-widest text-brand-text-variant uppercase">
-            {!user ? (
-              <button onClick={signInWithGoogle} className="flex items-center gap-2 hover:text-brand-primary transition-colors">
-                <Shield className="w-3 h-3" /> Admin Login
-              </button>
-            ) : (
-              <button onClick={() => signOut(auth)} className="flex items-center gap-2 hover:text-brand-primary transition-colors">
-                Logout ({user.email})
-              </button>
-            )}
             <a href="#" className="hover:text-brand-primary transition-colors">Privacy</a>
             <a href="#" className="hover:text-brand-primary transition-colors">Terms</a>
           </div>
