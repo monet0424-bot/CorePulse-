@@ -94,8 +94,11 @@ const Hero = () => (
           단 4주, 눈에 보이는 변화 시작<br />1:1 맞춤 필라테스로 바디라인과 건강함을 완성하세요
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
-          <button className="bg-brand-primary text-white px-10 py-5 rounded-full font-bold shadow-xl shadow-brand-primary/20 hover:-translate-y-1 transition-all">
-            지금 무료 상담 받기
+          <button 
+            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            className="bg-brand-primary text-white px-10 py-5 rounded-full font-bold shadow-xl shadow-brand-primary/20 hover:-translate-y-1 transition-all"
+          >
+            지금 무료 상담 예약하기 →
           </button>
           <button className="border border-brand-primary/20 text-brand-text-main hover:bg-brand-surface-container px-10 py-5 rounded-full font-bold transition-all">
             프로그램 자세히 보기
@@ -181,6 +184,104 @@ const Transformation = () => (
     </div>
   </section>
 );
+
+const RecommendedFor = () => {
+  const items = [
+    {
+      title: "체형이 무너진 것을 느끼는 분",
+      desc: "어깨, 골반, 허리 라인이 무너지고 자세가 틀어진 것이 고민이신 분"
+    },
+    {
+      title: "운동을 해도 변화가 없는 분",
+      desc: "열심히 운동해도 원하는 변화가 없고 금방 원래대로 돌아오는 분"
+    },
+    {
+      title: "혼자 운동이 어려운 분",
+      desc: "어떻게 운동해야 할지 모르거나 꾸준히 지속하기 어려운 분"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-[#fdfaf5] relative overflow-hidden">
+      {/* Background Decor - Updated Pilates Studio image with improved readability */}
+      <div className="absolute top-0 right-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <img 
+          src="https://postfiles.pstatic.net/MjAyNjA1MDNfNjMg/MDAxNzc3NzkyNDc0NTA1.F9DEurUhkJZh4lHufnABOFsT7XjF5r2cJ6plZ48VJosg.Q-hERCszBEMNi_0Dyt8YH3pP1Uv2hI5Xw4_Jbo_AoFkg.JPEG/photo-clean-brightly-lit-pilates-studio.jpg?type=w966" 
+          alt="Pilates Studio" 
+          className="w-full h-full object-cover object-right opacity-60 md:opacity-70"
+          referrerPolicy="no-referrer"
+        />
+        {/* Sophisticated mask for text area readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#fdfaf5] via-[#fdfaf5] to-transparent"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+        {/* Left Side: Text Content */}
+        <div className="lg:w-1/2">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <div className="flex flex-col items-start mb-8">
+              <span className="text-[10px] font-bold tracking-[0.4em] text-[#8ea07e] mb-4 uppercase">FOR YOU</span>
+              <div className="w-10 h-px bg-[#8ea07e]/40"></div>
+            </div>
+            
+            <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1f2d1f] mb-10 leading-tight">
+              이런 분들께<br />
+              추천합니다
+            </h2>
+            
+            <p className="text-[#55634a] text-lg leading-relaxed max-w-sm mb-12">
+              몸의 변화를 원하지만 어디서부터 시작해야 할지 막막한 분들을 위해 1:1 맞춤 프로그램으로 안전하게 안내드립니다.
+            </p>
+            
+            <div className="flex items-center gap-5 py-8 border-t border-[#8ea07e]/10">
+               <div className="w-12 h-12 rounded-full border border-[#8ea07e]/30 flex items-center justify-center text-[#8ea07e] flex-shrink-0">
+                  <Leaf className="w-6 h-6" />
+               </div>
+               <p className="text-sm font-medium text-[#55634a] leading-relaxed">
+                 개인별 체형과 목표에 맞춘 체계적인 관리로<br />
+                 건강한 변화를 경험해보세요.
+               </p>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right Side: Identity Cards */}
+        <div className="lg:w-1/2 w-full space-y-6">
+          {items.map((item, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: idx * 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white/80 backdrop-blur-md p-8 md:p-10 rounded-2xl md:rounded-[2.5rem] border border-[#8ea07e]/5 shadow-xl shadow-[#1f2d1f]/5 flex items-start gap-6 group hover:-translate-y-1 transition-all duration-500"
+            >
+              <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#f4f7f0] flex items-center justify-center text-[#4a5d3f] flex-shrink-0 group-hover:bg-[#4a5d3f] group-hover:text-white transition-colors duration-500">
+                <Check className="w-6 h-6 md:w-7 md:h-7 stroke-[3px]" />
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold text-[#1f2d1f] mb-1.5">{item.title}</h3>
+                <p className="text-[#647457] text-sm md:text-[15px] leading-relaxed opacity-80">
+                  {item.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Soft Decorative Elements */}
+      <div className="absolute bottom-0 left-0 w-64 h-64 pointer-events-none opacity-[0.05] -translate-x-1/2 translate-y-1/2">
+         <Leaf className="w-full h-full -rotate-45" />
+      </div>
+    </section>
+  );
+};
 
 const PremiumSection = () => {
   const features = [
@@ -355,6 +456,7 @@ const App = () => {
       <Hero />
       <Highlights />
       <Transformation />
+      <RecommendedFor />
 
       {/* Philosophy Section */}
       <section className="py-32" id="about">
@@ -484,8 +586,13 @@ const App = () => {
             className="w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
           />
-          {/* Gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#fdfaf5] via-[#fdfaf5]/60 to-transparent"></div>
+          {/* Gradient overlay for text readability with sophisticated stops */}
+          <div 
+            className="absolute inset-0 z-10" 
+            style={{
+              background: 'linear-gradient(to right, #fdfaf5 0%, #fdfaf5 40%, rgba(253, 250, 245, 0.4) 70%, rgba(31, 45, 31, 0.3) 100%)'
+            }}
+          ></div>
         </div>
         
         {/* Leaf Overlay (approximated shadow feel) */}
@@ -493,7 +600,7 @@ const App = () => {
           <Leaf className="w-full h-full -rotate-12 translate-x-[-20%] translate-y-[-10%]" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-20">
           <div className="max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -504,7 +611,7 @@ const App = () => {
             >
               <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-[#8ea07e] mb-8 uppercase">COREPULSE PILATES</span>
               
-              <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-12 leading-snug text-[#1f2b16]">
+              <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-12 leading-snug text-[#1f2d1f]">
                 지금 시작하지 않으면,<br />
                 몸은 <span className="relative">그대로입니다<span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#8ea07e]/30"></span></span>
               </h2>
@@ -565,7 +672,7 @@ const App = () => {
             <h2 className="font-serif text-4xl md:text-5xl font-medium mb-6">
               "나를 사랑하는 시간, CorePulse"
             </h2>
-            <p className="text-brand-text-variant">실제 회원님들의 놀라운 변화와 생생한 후기</p>
+            <p className="text-brand-text-variant">단 4주 만에 변화가 시작됩니다.<br />실제 회원님들의 놀라운 변화와 생생한 후기</p>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -701,7 +808,7 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-24">
           <div>
             <h2 className="font-serif text-4xl md:text-5xl mb-8">지금 바로 상담하세요</h2>
-            <p className="text-brand-text-variant font-bold mb-12">30초 입력으로 간편 상담<br />지금 신청 시 1:1 맞춤 프로그램을 안내드립니다</p>
+            <p className="text-brand-text-variant font-bold mb-12">30초 입력으로 상담 가능합니다<br />지금 신청하시면 1:1 맞춤 안내를 받아보실 수 있습니다</p>
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
