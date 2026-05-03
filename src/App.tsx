@@ -20,7 +20,9 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
-  Loader2
+  Loader2,
+  Calendar,
+  ShieldCheck
 } from 'lucide-react';
 
 const Nav = () => {
@@ -472,6 +474,83 @@ const App = () => {
         </div>
       </section>
 
+      {/* CTA Banner Section */}
+      <section className="py-32 bg-[#fdfaf5] relative overflow-hidden">
+        {/* Soft studio background atmosphere with improved readability mask */}
+        <div className="absolute top-0 right-0 w-full h-full pointer-events-none z-0">
+          <img 
+            src="https://postfiles.pstatic.net/MjAyNjA1MDNfMTI5/MDAxNzc3Nzc0NzQ0OTA1.oLROa384tWFcf_pDd8qmqpqq_xc6pBpeWYa3qe1mluUg.Ys4wxYrTd3CH8qQTgKahzejQXrjwyxt-A73GY8VP4g8g.PNG/ChatGPT_Image_2026%EB%85%84_5%EC%9B%94_3%EC%9D%BC_%EC%98%A4%EC%A0%84_11_18_36.png?type=w966" 
+            alt="Studio Background" 
+            className="w-full h-full object-cover object-center"
+            referrerPolicy="no-referrer"
+          />
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#fdfaf5] via-[#fdfaf5]/60 to-transparent"></div>
+        </div>
+        
+        {/* Leaf Overlay (approximated shadow feel) */}
+        <div className="absolute top-0 left-0 w-1/3 h-full pointer-events-none opacity-[0.05]">
+          <Leaf className="w-full h-full -rotate-12 translate-x-[-20%] translate-y-[-10%]" />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+          <div className="max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-center md:text-left flex flex-col items-center md:items-start"
+            >
+              <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-[#8ea07e] mb-8 uppercase">COREPULSE PILATES</span>
+              
+              <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl mb-12 leading-snug text-[#1f2b16]">
+                지금 시작하지 않으면,<br />
+                몸은 <span className="relative">그대로입니다<span className="absolute bottom-0 left-0 w-full h-0.5 bg-[#8ea07e]/30"></span></span>
+              </h2>
+
+              <div className="w-12 h-px bg-brand-surface-container mb-10"></div>
+
+              <p className="text-[#55634a] text-base md:text-lg mb-12 leading-relaxed">
+                지금 상담 신청 시<br />
+                1:1 맞춤 프로그램을 무료로 안내드립니다.
+              </p>
+
+              <button 
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-[#4a5d3f] text-white px-10 py-5 rounded-2xl md:rounded-3xl font-bold flex items-center gap-3 hover:bg-[#3d4d34] transition-all shadow-xl shadow-[#4a5d3f]/20 group"
+              >
+                <Calendar className="w-5 h-5 opacity-80" />
+                <span>무료 상담 예약하기</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              {/* Bottom Mini Icons */}
+              <div className="grid grid-cols-3 gap-8 md:gap-16 mt-24">
+                <div className="flex flex-col items-center md:items-start">
+                  <div className="w-11 h-11 flex items-center justify-center text-[#8ea07e] mb-3">
+                    <UserRound className="w-7 h-7" />
+                  </div>
+                  <span className="text-xs md:text-sm font-semibold text-[#55634a] whitespace-nowrap">1:1 맞춤 프로그램</span>
+                </div>
+                <div className="flex flex-col items-center md:items-start">
+                  <div className="w-11 h-11 flex items-center justify-center text-[#8ea07e] mb-3">
+                    <ShieldCheck className="w-7 h-7" />
+                  </div>
+                  <span className="text-xs md:text-sm font-semibold text-[#55634a] whitespace-nowrap">체계적인 관리</span>
+                </div>
+                <div className="flex flex-col items-center md:items-start">
+                  <div className="w-11 h-11 flex items-center justify-center text-[#8ea07e] mb-3">
+                    <Leaf className="w-7 h-7" />
+                  </div>
+                  <span className="text-xs md:text-sm font-semibold text-[#55634a] whitespace-nowrap">건강한 변화</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Review Section */}
       <section className="py-32 bg-brand-surface-low overflow-hidden" id="reviews">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
@@ -622,7 +701,7 @@ const App = () => {
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-24">
           <div>
             <h2 className="font-serif text-4xl md:text-5xl mb-8">지금 바로 상담하세요</h2>
-            <p className="text-brand-text-variant font-bold mb-12">지금 상담 신청 시,<br />내 몸 상태에 맞는 1:1 맞춤 프로그램을 안내드립니다</p>
+            <p className="text-brand-text-variant font-bold mb-12">30초 입력으로 간편 상담<br />지금 신청 시 1:1 맞춤 프로그램을 안내드립니다</p>
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
