@@ -89,14 +89,14 @@ const Hero = () => (
           몸이 바뀌면,<br />삶이 달라집니다
         </h1>
         <p className="text-lg md:text-xl text-brand-text-variant mb-12 max-w-lg leading-relaxed">
-          바쁜 일상 속, 나를 위한 가장 확실한 투자. 1:1 맞춤 필라테스로<br />당신이 꿈꾸던 바디라인과 건강한 정렬을 완성하세요.
+          단 4주, 눈에 보이는 변화 시작<br />1:1 맞춤 필라테스로 바디라인과 건강함을 완성하세요
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <button className="bg-brand-primary text-white px-10 py-5 rounded-full font-bold shadow-xl shadow-brand-primary/20 hover:-translate-y-1 transition-all">
             지금 무료 상담 받기
           </button>
           <button className="border border-brand-primary/20 text-brand-text-main hover:bg-brand-surface-container px-10 py-5 rounded-full font-bold transition-all">
-            프로그램 둘러보기
+            프로그램 자세히 보기
           </button>
         </div>
       </motion.div>
@@ -179,6 +179,88 @@ const Transformation = () => (
     </div>
   </section>
 );
+
+const PremiumSection = () => {
+  const features = [
+    {
+      title: "1:1 프라이빗 레슨",
+      desc: "오직 나만을 위한 맞춤 수업으로\n더 집중적인 케어를 제공합니다.",
+      icon: <UserRound className="w-10 h-10" />
+    },
+    {
+      title: "체형 분석 기반 프로그램",
+      desc: "체형과 움직임을 정확히 분석하여\n내 몸에 맞는 프로그램을 설계합니다.",
+      icon: <Ruler className="w-10 h-10" />
+    },
+    {
+      title: "무리 없는 단계별 진행",
+      desc: "개인의 수준과 컨디션에 맞춰\n안전하고 효과적으로 진행합니다.",
+      icon: <ChevronRight className="rotate-[-45deg] w-10 h-10" /> // Using a proxy for the steps/flag
+    }
+  ];
+
+  return (
+    <section className="py-32 bg-[#faf9f6] relative overflow-hidden">
+      {/* Decorative leaf shadow/overlay (approximated) */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.03]">
+        <Leaf className="absolute top-10 left-10 w-96 h-96 -rotate-12" />
+        <Leaf className="absolute bottom-10 right-10 w-96 h-96 rotate-12" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10 text-center">
+        <span className="text-sm font-bold tracking-[0.2em] text-[#6b7c5b] mb-6 block uppercase">PREMIUM 1:1 STUDIO</span>
+        <h2 className="font-serif text-3xl md:text-4xl mb-16 leading-relaxed">
+          처음이라도 걱정 없이 시작할 수 있도록,<br />
+          코어펄스 필라테스가 고민을 덜어드릴게요.
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {features.map((feature, idx) => (
+            <motion.div
+              key={idx}
+              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ delay: idx * 0.1 }}
+              viewport={{ once: true }}
+              className="bg-white p-12 rounded-[2.5rem] shadow-sm flex flex-col items-center text-center border border-brand-surface-container"
+            >
+              <div className="w-24 h-24 bg-[#f4f2ee] rounded-full flex items-center justify-center mb-8 text-[#6b7c5b]">
+                {feature.icon}
+              </div>
+              <div className="w-8 h-0.5 bg-brand-surface-container mb-6"></div>
+              <h3 className="font-serif text-2xl mb-4 font-bold text-brand-text-main">{feature.title}</h3>
+              <p className="text-brand-text-variant text-sm whitespace-pre-line leading-relaxed">
+                {feature.desc}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="bg-[#f0f2ed] rounded-[2rem] p-10 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12"
+        >
+          <div className="flex items-center gap-6">
+            <div className="w-16 h-16 flex items-center justify-center opacity-30">
+              <Leaf className="w-12 h-12 text-[#6b7c5b]" />
+            </div>
+            <div className="w-px h-12 bg-gray-300 hidden md:block"></div>
+            <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm text-[#2d3a1f]">
+              <Check className="w-8 h-8 stroke-[3]" />
+            </div>
+          </div>
+          <div className="text-center md:text-left">
+            <h4 className="font-serif text-2xl md:text-3xl mb-2 font-bold text-[#1a2b0d]">처음이라도 걱정 없이 시작할 수 있습니다.</h4>
+            <p className="text-brand-text-variant font-medium">코어펄스 필라테스는 회원님의 건강한 변화를 함께 만들어갑니다.</p>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
 
 const App = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -271,7 +353,6 @@ const App = () => {
       <Hero />
       <Highlights />
       <Transformation />
-          {/* ... existing other sections ... */}
 
       {/* Philosophy Section */}
       <section className="py-32" id="about">
@@ -535,12 +616,13 @@ const App = () => {
         </div>
       </section>
 
+      <PremiumSection />
       {/* Contact Section */}
-      <section className="py-32">
+      <section id="contact" className="py-32">
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-24">
           <div>
             <h2 className="font-serif text-4xl md:text-5xl mb-8">지금 바로 상담하세요</h2>
-            <p className="text-brand-text-variant mb-12">전문적인 체형 분석과 함께 당신만의 운동 플랜을 설계해 드립니다.</p>
+            <p className="text-brand-text-variant font-bold mb-12">지금 상담 신청 시,<br />내 몸 상태에 맞는 1:1 맞춤 프로그램을 안내드립니다</p>
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -591,7 +673,7 @@ const App = () => {
                 disabled={isSubmitting}
                 className="w-full bg-brand-primary text-white py-5 rounded-full font-bold hover:shadow-2xl transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "상담 신청하기"}
+                {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "무료 상담 신청하기"}
               </button>
 
               {submitStatus && (
